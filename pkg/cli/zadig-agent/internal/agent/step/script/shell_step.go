@@ -88,6 +88,7 @@ func (s *ShellStep) Run(ctx context.Context) error {
 
 	cmdStdoutReader, err := cmd.StdoutPipe()
 	if err != nil {
+		s.Logger.Errorf(fmt.Sprintf("StdoutPipe error: %v.", err))
 		return err
 	}
 
@@ -101,6 +102,7 @@ func (s *ShellStep) Run(ctx context.Context) error {
 
 	cmdStdErrReader, err := cmd.StderrPipe()
 	if err != nil {
+		s.Logger.Errorf(fmt.Sprintf("StderrPipe error: %v.", err))
 		return err
 	}
 
@@ -112,6 +114,7 @@ func (s *ShellStep) Run(ctx context.Context) error {
 	}()
 
 	if err := cmd.Start(); err != nil {
+		s.Logger.Errorf(fmt.Sprintf("cmd.Start() error: %v.", err))
 		return err
 	}
 
