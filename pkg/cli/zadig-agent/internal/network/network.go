@@ -50,7 +50,7 @@ func NewZadigClient() *ZadigClient {
 func (c *ZadigClient) RequestJob() (*types.ZadigJobTask, error) {
 	resp := new(types.ZadigJobTask)
 
-	body, err := httpclient.Get(GetFullURL(c.AgentConfig.URL, RequestJobBaseUrl), httpclient.SetQueryParam("token", c.AgentConfig.Token), httpclient.SetResult(resp))
+	body, err := httpclient.GetHeart(GetFullURL(c.AgentConfig.URL, RequestJobBaseUrl), true, httpclient.SetQueryParam("token", c.AgentConfig.Token), httpclient.SetResult(resp))
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +90,7 @@ func (c *ZadigClient) ReportJob(parameters *types.ReportJobParameters) (*types.R
 	}
 	resp := new(types.ReportAgentJobResp)
 
-	body, err := httpclient.Post(GetFullURL(c.AgentConfig.URL, ReportJobBaseUrl), httpclient.SetBody(request), httpclient.SetResult(resp))
+	body, err := httpclient.PostHeart(GetFullURL(c.AgentConfig.URL, ReportJobBaseUrl), true, httpclient.SetBody(request), httpclient.SetResult(resp))
 	if err != nil {
 		return nil, err
 	}

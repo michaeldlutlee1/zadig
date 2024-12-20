@@ -168,7 +168,7 @@ func Heartbeat(config *AgentConfig, parameters *HeartbeatParameters) (*Heartbeat
 		Parameters: parameters,
 	}
 	resp := new(HeartbeatServerResponse)
-	body, err := httpclient.Post(GetFullURL(config.URL, heartbeatBaseUrl), httpclient.SetBody(request), httpclient.SetResult(resp))
+	body, err := httpclient.PostHeart(GetFullURL(config.URL, heartbeatBaseUrl), true, httpclient.SetBody(request), httpclient.SetResult(resp))
 	if err != nil {
 		return nil, err
 	}

@@ -46,8 +46,16 @@ func Get(url string, rfs ...RequestFunc) (*resty.Response, error) {
 	return New().Get(url, rfs...)
 }
 
+func GetHeart(url string, close bool, rfs ...RequestFunc) (*resty.Response, error) {
+	return New().GetHeart(url, close, rfs...)
+}
+
 func Post(url string, rfs ...RequestFunc) (*resty.Response, error) {
 	return New().Post(url, rfs...)
+}
+
+func PostHeart(url string, close bool, rfs ...RequestFunc) (*resty.Response, error) {
+	return New().PostHeart(url, close, rfs...)
 }
 
 func Patch(url string, rfs ...RequestFunc) (*resty.Response, error) {
@@ -120,8 +128,16 @@ func (c *Client) Get(url string, rfs ...RequestFunc) (*resty.Response, error) {
 	return c.Request(resty.MethodGet, url, rfs...)
 }
 
+func (c *Client) GetHeart(url string, close bool, rfs ...RequestFunc) (*resty.Response, error) {
+	return c.RequestHeart(resty.MethodGet, url, close, rfs...)
+}
+
 func (c *Client) Post(url string, rfs ...RequestFunc) (*resty.Response, error) {
 	return c.Request(resty.MethodPost, url, rfs...)
+}
+
+func (c *Client) PostHeart(url string, close bool, rfs ...RequestFunc) (*resty.Response, error) {
+	return c.RequestHeart(resty.MethodPost, url, close, rfs...)
 }
 
 func (c *Client) Patch(url string, rfs ...RequestFunc) (*resty.Response, error) {
@@ -149,7 +165,19 @@ func (c *Client) Request(method, url string, rfs ...RequestFunc) (*resty.Respons
 		url = c.BaseURI + url
 	}
 	r := c.R()
+	for _, rf := range rfs {
+		rf(r)
+	}
 
+	return c.wrapError(r.Execute(method, url))
+}
+
+func (c *Client) RequestHeart(method, url string, close bool, rfs ...RequestFunc) (*resty.Response, error) {
+	if c.BaseURI != "" {
+		url = c.BaseURI + url
+	}
+	c.SetCloseConnection(close)
+	r := c.R()
 	for _, rf := range rfs {
 		rf(r)
 	}
